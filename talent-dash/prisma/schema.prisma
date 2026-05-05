@@ -1,34 +1,29 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Salary {
   id                 String   @id @default(uuid())
-  company            String
+  company            String   // Must be normalized (lowercase, trimmed) before saving
   role               String
-  level              String
+  level              String   // STANDARDIZED: L3/L4/L5 etc.
   location           String
   experience_years   Float
   base_salary        Int
-  bonus              Int      @default(0)
-  stock              Int      @default(0)
-  total_compensation Int
-  confidence_score   Float
+  bonus              Int      @default(0) // Default 0 if missing per requirements
+  stock              Int      @default(0) // Default 0 if missing per requirements
+  total_compensation Int      // Calculated: base + bonus + stock
+  confidence_score   Float    // Dummy AI score for now
   created_at         DateTime @default(now())
 
+  // Indexes for fast server-side filtering (Crucial for GET /salaries)
   @@index([company])
   @@index([role])
   @@index([level])
   @@index([location])
-  @@index([total_compensation])
 }

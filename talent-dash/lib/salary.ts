@@ -1,4 +1,4 @@
-import type { Prisma, Salary } from "@/app/generated/prisma/client";
+import type { Prisma, Salary } from "@prisma/client";
 
 export const SALARY_LEVELS = ["L3", "L4", "L5"] as const;
 
